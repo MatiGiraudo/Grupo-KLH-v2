@@ -4,6 +4,8 @@ import { getMediaUrl } from '../config';
 
 export default function Navbar({ onLogout, isAdmin, isPageAdmin, theme, toggleTheme }) {
   const [isOpen, setIsOpen] = useState(false);
+  const base = import.meta.env.BASE_URL || '/';
+  const homePath = base.endsWith('/') ? base : `${base}/`;
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -38,11 +40,11 @@ export default function Navbar({ onLogout, isAdmin, isPageAdmin, theme, toggleTh
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8">
-            <a href="/#inicio" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-klh-gold dark:hover:text-klh-gold transition-colors">Inicio</a>
-            <a href="/#nosotros" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-klh-gold dark:hover:text-klh-gold transition-colors">Nosotros</a>
-            <a href="/#empresas" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-klh-gold dark:hover:text-klh-gold transition-colors">Empresas</a>
-            <a href="/#logistica" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-klh-gold dark:hover:text-klh-gold transition-colors">Proceso</a>
-            <a href="/#contacto" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-klh-gold dark:hover:text-klh-gold transition-colors">Contacto</a>
+            <a href={`${homePath}#inicio`} className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-klh-gold dark:hover:text-klh-gold transition-colors">Inicio</a>
+            <a href={`${homePath}#nosotros`} className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-klh-gold dark:hover:text-klh-gold transition-colors">Nosotros</a>
+            <a href={`${homePath}#empresas`} className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-klh-gold dark:hover:text-klh-gold transition-colors">Empresas</a>
+            <a href={`${homePath}#logistica`} className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-klh-gold dark:hover:text-klh-gold transition-colors">Proceso</a>
+            <a href={`${homePath}#contacto`} className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-klh-gold dark:hover:text-klh-gold transition-colors">Contacto</a>
 
             {/* Theme Toggle Button */}
             <button
@@ -90,35 +92,35 @@ export default function Navbar({ onLogout, isAdmin, isPageAdmin, theme, toggleTh
         <div className="md:hidden glass-panel border-b border-slate-200 dark:border-white/10 animate-fade-in">
           <div className="px-2 pt-2 pb-4 space-y-1 sm:px-3 text-center">
             <a
-              href="/#inicio"
+              href={`${homePath}#inicio`}
               onClick={() => setIsOpen(false)}
               className="block px-3 py-2 rounded-md text-base font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5"
             >
               Inicio
             </a>
             <a
-              href="/#nosotros"
+              href={`${homePath}#nosotros`}
               onClick={() => setIsOpen(false)}
               className="block px-3 py-2 rounded-md text-base font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5"
             >
               Nosotros
             </a>
             <a
-              href="/#empresas"
+              href={`${homePath}#empresas`}
               onClick={() => setIsOpen(false)}
               className="block px-3 py-2 rounded-md text-base font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5"
             >
               Empresas
             </a>
             <a
-              href="/#logistica"
+              href={`${homePath}#logistica`}
               onClick={() => setIsOpen(false)}
               className="block px-3 py-2 rounded-md text-base font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5"
             >
               Proceso
             </a>
             <a
-              href="/#contacto"
+              href={`${homePath}#contacto`}
               onClick={() => setIsOpen(false)}
               className="block px-3 py-2 rounded-md text-base font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5"
             >

@@ -42,7 +42,7 @@ const defaultData = {
     ctaLink: "#empresas",
     contactCtaText: "Contáctanos",
     contactCtaLink: "#contacto",
-    bgImageUrl: "/Banner.mp4"
+    bgImageUrl: "/banner.mp4"
   },
   about: {
     title: "Líderes en Comercio Internacional",

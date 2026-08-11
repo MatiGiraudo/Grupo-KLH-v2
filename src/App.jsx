@@ -41,24 +41,63 @@ function App() {
 
     window.addEventListener('popstate', handleLocationChange);
     
-    const handleAnchorClick = (e) => {
-      const href = e.target.getAttribute('href');
-      if (href && href.startsWith('#')) {
-        e.preventDefault();
+    const handleAnchorClick = (evt, anchor) => {
+      const href = anchor.getAttribute('href');
+      if (!href) return;
+
+      if (href.startsWith('#')) {
+        evt.preventDefault();
         const element = document.querySelector(href);
         if (element) {
           element.scrollIntoView({ behavior: 'smooth' });
         }
-      } else if (href && href.includes('/admin')) {
-        e.preventDefault();
+        return;
+      }
+
+      if (href.includes('#')) {
+        const [path, hash] = href.split('#');
+        const base = import.meta.env.BASE_URL || '/';
+        const cleanPath = path.replace(/\/$/, '') || '/';
+        const cleanCurrentPath = currentPath.replace(/\/$/, '') || '/';
+        const cleanBase = base.replace(/\/$/, '') || '/';
+
+        if (cleanCurrentPath === '/' || cleanCurrentPath === cleanBase) {
+          evt.preventDefault();
+          const element = document.querySelector(`#${hash}`);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+            window.history.pushState({}, '', `${base}#${hash}`);
+          }
+          return;
+        } else {
+          evt.preventDefault();
+          const targetPath = `${base}#${hash}`;
+          window.history.pushState({}, '', targetPath);
+          setCurrentPath(base);
+          setTimeout(() => {
+            const element = document.querySelector(`#${hash}`);
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth' });
+            }
+          }, 100);
+          return;
+        }
+      }
+
+      if (href.includes('/admin')) {
+        evt.preventDefault();
         const base = import.meta.env.BASE_URL || '/';
         const adminPath = base.endsWith('/') ? `${base}admin` : `${base}/admin`;
         window.history.pushState({}, '', adminPath);
         setCurrentPath(adminPath);
-      } else if (href === '/' || href === '' || (import.meta.env.BASE_URL && href === import.meta.env.BASE_URL)) {
-        e.preventDefault();
+        return;
+      }
+
+      if (href === '/' || href === '' || (import.meta.env.BASE_URL && href === import.meta.env.BASE_URL)) {
+        evt.preventDefault();
         window.history.pushState({}, '', import.meta.env.BASE_URL || '/');
         setCurrentPath(import.meta.env.BASE_URL || '/');
+        return;
       }
     };
 
@@ -66,7 +105,7 @@ function App() {
       // Find the closest anchor tag (to handle clicks on SVG/span inside anchor)
       const anchor = e.target.closest('a');
       if (anchor) {
-        handleAnchorClick(anchor);
+        handleAnchorClick(e, anchor);
       }
     });
 
