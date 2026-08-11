@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+/* Enable class-based dark mode in Tailwind v4 */
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-klh-navy: #0b192c;
+  --color-klh-slate: #1e3e62;
+  --color-klh-gold: #d4af37;
+  --color-klh-goldLight: #f1c40f;
+  --color-klh-light: #f8fafc;
+  --color-klh-dark: #030712;
+
+  --font-sans: "Inter", sans-serif;
+  --font-display: "Poppins", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 font-sans antialiased scroll-smooth transition-colors duration-300;
+  }
+}
+
+/* Glassmorphism custom styles using native Tailwind dark variants */
+.glass-panel {
+  @apply bg-white/85 dark:bg-slate-900/75 border-slate-200/80 dark:border-white/10 backdrop-blur-md;
+}
+
+.glass-card {
+  @apply bg-white/95 dark:bg-slate-900/45 border-slate-200/80 dark:border-white/5 backdrop-blur-md transition-all duration-300;
+}
+
+.glass-card:hover {
+  @apply bg-white border-klh-gold/50 dark:bg-slate-900/60 dark:border-klh-gold/40 -translate-y-1 shadow-lg shadow-klh-gold/25 dark:shadow-none;
+}
+
+/* Base fade-in and slide keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
