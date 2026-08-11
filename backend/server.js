@@ -17,9 +17,13 @@ app.use(cors());
 app.use(express.json({ limit: '100mb' }));
 
 // Ensure upload folder exists and serve statically
-const UPLOADS_DIR = path.join(__dirname, 'uploads');
-if (!fs.existsSync(UPLOADS_DIR)) {
-  fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+const UPLOADS_DIR = process.env.VERCEL ? '/tmp/uploads' : path.join(__dirname, 'uploads');
+try {
+  if (!fs.existsSync(UPLOADS_DIR)) {
+    fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+  }
+} catch (e) {
+  console.warn('Warning: Could not create uploads directory:', e.message);
 }
 app.use('/uploads', express.static(UPLOADS_DIR));
 
