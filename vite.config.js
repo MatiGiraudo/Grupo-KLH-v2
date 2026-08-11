@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [react()],
   base: process.env.NODE_ENV === 'production' ? '/Grupo-KLH-v2/' : '/',
   server: {
+    host: true,
     proxy: {
       '/api': {
         target: 'http://localhost:5000',
