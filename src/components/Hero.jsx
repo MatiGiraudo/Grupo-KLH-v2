@@ -22,7 +22,7 @@ export default function Hero({ data }) {
       <div className="absolute inset-0 z-0">
         {isVideo ? (
           <video
-            src='../banner.mp4'
+            src={getMediaUrl(data.bgImageUrl)}
             autoPlay
             loop
             muted
