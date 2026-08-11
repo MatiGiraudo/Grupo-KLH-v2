@@ -3,6 +3,7 @@ import { Save, Layout, Info, Building2, ClipboardList, PhoneCall, RefreshCw, Eye
 import Hero from './Hero';
 import About from './About';
 import CompanyGrid from './CompanyGrid';
+import { API_BASE } from '../config';
 import LogisticsFlow from './LogisticsFlow';
 import ContactForm from './ContactForm';
 import { InputField, TextAreaField, TabButton, SectionHeader } from './FormControls';
@@ -111,12 +112,12 @@ export default function AdminPanel({ data, onSave, onLogout, theme, toggleTheme 
 
   return (
     <div className="w-full h-screen bg-slate-50 dark:bg-slate-950 flex flex-col overflow-hidden text-slate-800 dark:text-slate-100">
-      
+
       {/* Top Header Bar */}
       <header className="h-16 border-b border-slate-200 dark:border-white/10 px-6 flex items-center justify-between bg-slate-100 dark:bg-slate-900 shrink-0 z-20">
         <div className="flex items-center gap-3">
           <div className="h-9 w-9 rounded-full overflow-hidden border border-klh-gold shrink-0">
-            <img src="/logo.png" alt="Logo" className="h-full w-full object-cover" />
+            <img src={'/logo.png'} alt="Logo" className="h-full w-full object-cover" />
           </div>
           <div>
             <h1 className="font-display font-bold text-lg text-slate-900 dark:text-white">Grupo KLH — Administración</h1>
@@ -127,7 +128,7 @@ export default function AdminPanel({ data, onSave, onLogout, theme, toggleTheme 
         {/* Global actions */}
         <div className="flex items-center gap-4">
           {/* Toggle Theme Button */}
-          <button 
+          <button
             onClick={toggleTheme}
             className="p-2 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-klh-gold dark:hover:text-klh-gold transition-all cursor-pointer"
             aria-label="Toggle Theme"
@@ -135,7 +136,7 @@ export default function AdminPanel({ data, onSave, onLogout, theme, toggleTheme 
             {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
           </button>
 
-          <button 
+          <button
             onClick={() => setShowPreview(!showPreview)}
             className="flex items-center gap-2 px-3.5 py-2 bg-white hover:bg-slate-50 border border-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-700 rounded-lg text-xs font-semibold tracking-wide text-slate-700 dark:text-slate-300 transition-all cursor-pointer"
           >
@@ -143,7 +144,7 @@ export default function AdminPanel({ data, onSave, onLogout, theme, toggleTheme 
             {showPreview ? 'Ocultar Vista Previa' : 'Vista Previa'}
           </button>
 
-          <a 
+          <a
             href="/"
             className="flex items-center gap-1.5 px-3.5 py-2 bg-white hover:bg-slate-50 border border-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-700 rounded-lg text-xs font-semibold tracking-wide text-slate-700 dark:text-slate-300 transition-all"
           >
@@ -151,7 +152,7 @@ export default function AdminPanel({ data, onSave, onLogout, theme, toggleTheme 
             Ver Web Pública
           </a>
 
-          <button 
+          <button
             onClick={onLogout}
             className="flex items-center gap-1.5 px-3.5 py-2 bg-red-500/10 hover:bg-red-500/20 border border-red-500/25 rounded-lg text-xs font-semibold tracking-wide text-red-500 transition-all cursor-pointer"
           >
@@ -163,10 +164,10 @@ export default function AdminPanel({ data, onSave, onLogout, theme, toggleTheme 
 
       {/* Main Workspace Layout */}
       <div className="flex-1 flex overflow-hidden">
-        
+
         {/* Left Toolbar + Form Editor Panel */}
         <div className={`flex flex-col h-full border-r border-slate-200 dark:border-white/10 ${showPreview ? 'w-1/2' : 'w-full'} transition-all duration-300`}>
-          
+
           <div className="flex-1 flex overflow-hidden">
             {/* Sidebar Tabs */}
             <div className="w-56 border-r border-slate-200 dark:border-white/5 bg-slate-100/50 dark:bg-slate-950/40 p-4 space-y-1.5 shrink-0 overflow-y-auto">
@@ -178,7 +179,7 @@ export default function AdminPanel({ data, onSave, onLogout, theme, toggleTheme 
 
             {/* Editing forms (Scrollable) */}
             <div className="flex-1 overflow-y-auto p-6 bg-slate-900/10 space-y-6">
-              
+
               {/* HERO EDITOR */}
               {activeTab === 'hero' && (
                 <div className="space-y-5 animate-fade-in">
@@ -188,11 +189,11 @@ export default function AdminPanel({ data, onSave, onLogout, theme, toggleTheme 
                   <TextAreaField label="Descripción Breve" value={editedData.hero.description} onChange={(val) => handleHeroChange('description', val)} />
                   <div className="space-y-2.5">
                     <InputField label="Fondo (URL de Imagen o Video)" value={editedData.hero.bgImageUrl} onChange={(val) => handleHeroChange('bgImageUrl', val)} extraClass="font-mono text-xs" />
-                    
+
                     <div className="p-3 bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-lg space-y-2">
                       <span className="block text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Subir Archivo Local de Imagen o Video</span>
-                      <input 
-                        type="file" 
+                      <input
+                        type="file"
                         accept="image/*,video/*"
                         onChange={async (e) => {
                           const file = e.target.files[0];
@@ -202,7 +203,7 @@ export default function AdminPanel({ data, onSave, onLogout, theme, toggleTheme 
                           reader.onloadend = async () => {
                             try {
                               const token = localStorage.getItem('grupoklh_token');
-                              const res = await fetch('/api/upload', {
+                              const res = await fetch(`${API_BASE}/api/upload`, {
                                 method: 'POST',
                                 headers: {
                                   'Content-Type': 'application/json',
@@ -247,7 +248,7 @@ export default function AdminPanel({ data, onSave, onLogout, theme, toggleTheme 
                   <SectionHeader title="Sobre Nosotros" description="Administra la descripción institucional y los hitos del holding." />
                   <InputField label="Título" value={editedData.about.title} onChange={(val) => handleAboutChange('title', val)} />
                   <TextAreaField label="Descripción del Grupo" value={editedData.about.description} onChange={(val) => handleAboutChange('description', val)} rows={6} />
-                  
+
                   <div className="space-y-3 pt-3 border-t border-white/5">
                     <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-2">Estadísticas y Métricas</h4>
                     <div className="grid grid-cols-2 gap-3">
@@ -271,7 +272,7 @@ export default function AdminPanel({ data, onSave, onLogout, theme, toggleTheme 
                     <div key={company.id} className="p-5 bg-white dark:bg-slate-950/40 border border-slate-200 dark:border-white/10 rounded-xl space-y-3.5 shadow-sm">
                       <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/5 pb-1">
                         <span className="text-xs font-bold text-slate-500 dark:text-slate-400">ID: {company.id}</span>
-                        <button 
+                        <button
                           onClick={() => handleDeleteCompany(index)}
                           className="flex items-center gap-1 px-2.5 py-1 bg-red-500/10 hover:bg-red-500/25 border border-red-500/20 text-red-500 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer"
                         >
@@ -286,11 +287,11 @@ export default function AdminPanel({ data, onSave, onLogout, theme, toggleTheme 
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <InputField label="Eslogan corporativo" value={company.tagline} onChange={(val) => handleCompanyChange(index, 'tagline', val)} />
-                        
+
                         {/* Selector de Icono de Empresa */}
                         <div className="space-y-2">
                           <label className="block text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Icono</label>
-                          <select 
+                          <select
                             value={company.icon}
                             onChange={(e) => handleCompanyChange(index, 'icon', e.target.value)}
                             className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 focus:border-klh-gold rounded-lg px-3 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-klh-gold transition-all"
@@ -315,7 +316,7 @@ export default function AdminPanel({ data, onSave, onLogout, theme, toggleTheme 
                         <label className="block text-[9px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Especialidades (4 ítems)</label>
                         <div className="grid grid-cols-2 gap-2">
                           {company.details.map((detail, detIdx) => (
-                            <input 
+                            <input
                               key={detIdx}
                               type="text"
                               value={detail}
@@ -329,7 +330,7 @@ export default function AdminPanel({ data, onSave, onLogout, theme, toggleTheme 
                   ))}
 
                   {/* Botón para agregar nueva empresa */}
-                  <button 
+                  <button
                     onClick={handleAddCompany}
                     className="w-full flex items-center justify-center gap-2 px-6 py-4 border border-dashed border-slate-300 dark:border-white/10 hover:border-klh-gold dark:hover:border-klh-gold text-slate-600 dark:text-slate-400 hover:text-klh-gold hover:bg-klh-gold/5 rounded-2xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer"
                   >
@@ -353,15 +354,15 @@ export default function AdminPanel({ data, onSave, onLogout, theme, toggleTheme 
 
           {/* Form Actions Footer */}
           <div className="p-4 border-t border-slate-200 dark:border-white/10 flex items-center justify-between bg-slate-100 dark:bg-slate-900 shrink-0">
-            <button 
-              onClick={handleReset} 
+            <button
+              onClick={handleReset}
               className="flex items-center gap-1.5 px-3 py-2 border border-slate-200 dark:border-white/10 rounded-lg text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/5 transition-all cursor-pointer"
             >
               <RefreshCw size={14} />
               Revertir
             </button>
-            <button 
-              onClick={handleSave} 
+            <button
+              onClick={handleSave}
               className="flex items-center gap-1.5 px-6 py-2.5 bg-klh-gold hover:bg-klh-goldLight text-klh-navy font-bold rounded-lg text-xs uppercase tracking-wider transition-all cursor-pointer shadow-md shadow-klh-gold/10"
             >
               <Save size={14} />

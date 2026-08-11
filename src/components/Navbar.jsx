@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, LogOut, Sun, Moon } from 'lucide-react';
+import { getMediaUrl } from '../config';
 
 export default function Navbar({ onLogout, isAdmin, isPageAdmin, theme, toggleTheme }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,7 +28,7 @@ export default function Navbar({ onLogout, isAdmin, isPageAdmin, theme, toggleTh
           {/* Logo */}
           <a href="/" className="flex items-center gap-2">
             <div className='w-20 rounded-full overflow-hidden border-2 border-klh-gold'>
-              <img className="w-20" src="/logo.png" alt="Logo KLH" />
+              <img className="w-20" src={getMediaUrl('/logo.png')} alt="Logo KLH" />
             </div>
             <div>
               <span className="font-display font-bold text-lg tracking-wider text-slate-900 dark:text-white">GRUPO <span className="text-klh-gold">KLH</span></span>

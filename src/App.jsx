@@ -3,12 +3,12 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
 import CompanyGrid from './components/CompanyGrid';
-
 import ContactForm from './components/ContactForm';
 import Footer from './components/Footer';
 import Login from './components/Login';
 import AdminPanel from './components/AdminPanel';
 import { Loader2 } from 'lucide-react';
+import { API_BASE } from './config';
 
 function App() {
   const [data, setData] = useState(null);
@@ -25,38 +25,48 @@ function App() {
     } else {
       document.documentElement.classList.remove('dark');
     }
+    localStorage.setItem('grupoklh_theme', theme);
   }, [theme]);
 
   const toggleTheme = () => {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
-    localStorage.setItem('grupoklh_theme', nextTheme);
   };
 
-  // Handle location/route changes (basic SPA router)
+  // Handle path routing
   useEffect(() => {
     const handleLocationChange = () => {
       setCurrentPath(window.location.pathname);
     };
+
     window.addEventListener('popstate', handleLocationChange);
     
-    // Also hijack standard anchor clicks for navigation to keep state
     const handleAnchorClick = (e) => {
       const href = e.target.getAttribute('href');
-      if (href && href.startsWith('/admin')) {
+      if (href && href.startsWith('#')) {
         e.preventDefault();
-        window.history.pushState({}, '', '/admin');
-        setCurrentPath('/admin');
-      } else if (href === '/') {
+        const element = document.querySelector(href);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      } else if (href && href.includes('/admin')) {
         e.preventDefault();
-        window.history.pushState({}, '', '/');
-        setCurrentPath('/');
+        const base = import.meta.env.BASE_URL || '/';
+        const adminPath = base.endsWith('/') ? `${base}admin` : `${base}/admin`;
+        window.history.pushState({}, '', adminPath);
+        setCurrentPath(adminPath);
+      } else if (href === '/' || href === '' || (import.meta.env.BASE_URL && href === import.meta.env.BASE_URL)) {
+        e.preventDefault();
+        window.history.pushState({}, '', import.meta.env.BASE_URL || '/');
+        setCurrentPath(import.meta.env.BASE_URL || '/');
       }
     };
 
     document.addEventListener('click', (e) => {
-      if (e.target.tagName === 'A') {
-        handleAnchorClick(e);
+      // Find the closest anchor tag (to handle clicks on SVG/span inside anchor)
+      const anchor = e.target.closest('a');
+      if (anchor) {
+        handleAnchorClick(anchor);
       }
     });
 
@@ -70,7 +80,7 @@ function App() {
     const fetchContent = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/content');
+        const response = await fetch(`${API_BASE}/api/content`);
         if (response.ok) {
           const json = await response.json();
           setData(json);
@@ -101,7 +111,7 @@ function App() {
 
   const handleSaveData = async (updatedData) => {
     try {
-      const response = await fetch('/api/content', {
+      const response = await fetch(`${API_BASE}/api/content`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -156,7 +166,7 @@ function App() {
   }
 
   // ROUTER: Admin View
-  if (currentPath === '/admin') {
+  if (currentPath.endsWith('/admin') || currentPath.endsWith('/admin/')) {
     return token ? (
       <AdminPanel 
         data={data} 

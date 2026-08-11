@@ -38,7 +38,7 @@ const defaultData = {
     ctaLink: "#empresas",
     contactCtaText: "Contáctanos",
     contactCtaLink: "#contacto",
-    bgImageUrl: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&q=80&w=1920"
+    bgImageUrl: "/Banner.mp4"
   },
   about: {
     title: "Líderes en Comercio Internacional",
@@ -240,26 +240,44 @@ app.post('/api/login', (req, res) => {
   }
 });
 
-// Start Server and Database initialization
-app.listen(PORT, async () => {
-  console.log(`Server running on port ${PORT}`);
-  // Retry database connection on startup to handle Docker startup race condition
+// Middleware to ensure DB connection is ready (Crucial for Vercel Serverless environment)
+let dbInitialized = false;
+async function ensureDb(req, res, next) {
+  if (dbInitialized) {
+    return next();
+  }
+  
   let connected = false;
-  let retries = 5;
+  let retries = 3;
   while (!connected && retries > 0) {
     try {
       await pool.query('SELECT NOW()');
       connected = true;
-      console.log('Connected to PostgreSQL successfully.');
     } catch (e) {
-      console.log(`Failed to connect to DB. Retrying in 3 seconds... (${retries} attempts left)`);
+      console.error(`Failed to connect to DB. Retrying... (${retries} attempts left)`);
       retries--;
-      await new Promise(res => setTimeout(res, 3000));
+      if (retries > 0) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
     }
   }
+
   if (connected) {
     await initDb();
+    dbInitialized = true;
+    next();
   } else {
-    console.error('Could not connect to PostgreSQL database.');
+    res.status(500).json({ error: 'Could not connect to PostgreSQL database.' });
   }
-});
+}
+
+app.use('/api', ensureDb);
+
+// Start Server (only if not running as a Vercel Serverless function)
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+export default app;

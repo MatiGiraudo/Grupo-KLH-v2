@@ -1,4 +1,5 @@
 import React from 'react';
+import { getMediaUrl } from '../config';
 
 export default function Footer() {
   return (
@@ -10,7 +11,7 @@ export default function Footer() {
           <div className="space-y-4 col-span-1 md:col-span-2">
             <div className="flex items-center gap-2">
               <div className="h-8 w-8 rounded-full overflow-hidden border border-klh-gold shrink-0">
-                <img src="/logo.png" alt="Logo" className="h-full w-full object-cover" />
+                <img src={getMediaUrl('/logo.png')} alt="Logo" className="h-full w-full object-cover" />
               </div>
               <span className="font-display font-bold text-md tracking-wider text-white">GRUPO <span className="text-klh-gold">KLH</span></span>
             </div>

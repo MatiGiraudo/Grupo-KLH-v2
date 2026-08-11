@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowRight, MessageSquare } from 'lucide-react';
+import { getMediaUrl } from '../config';
 
 export default function Hero({ data }) {
   // Detect if the background URL represents a video file
@@ -21,7 +22,7 @@ export default function Hero({ data }) {
       <div className="absolute inset-0 z-0">
         {isVideo ? (
           <video
-            src={data.bgImageUrl}
+            src='../banner.mp4'
             autoPlay
             loop
             muted
@@ -30,7 +31,7 @@ export default function Hero({ data }) {
           />
         ) : (
           <img
-            src={data.bgImageUrl}
+            src={getMediaUrl(data.bgImageUrl)}
             alt="Importación desde China"
             className="w-full h-full object-cover object-center opacity-55 transform scale-100 transition-opacity duration-500"
           />
