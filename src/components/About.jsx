@@ -58,11 +58,11 @@ export default function About({ data }) {
           {/* Stats Grid */}
           <div className="lg:col-span-5 grid grid-cols-2 gap-4">
             {data.stats.map((stat, idx) => (
-              <div key={stat.id || idx} className="glass-card p-6 sm:p-8 rounded-2xl flex flex-col justify-between text-center lg:text-left shadow-sm dark:shadow-none">
-                <span className="font-display font-bold text-3xl sm:text-4xl text-klh-gold tracking-tight mb-2">
+              <div key={stat.id || idx} className="glass-card p-4 sm:p-6 lg:p-8 rounded-2xl flex flex-col justify-between text-center lg:text-left shadow-sm dark:shadow-none">
+                <span className="font-display font-bold text-2xl sm:text-3xl lg:text-4xl text-klh-gold tracking-tight mb-2">
                   {stat.value}
                 </span>
-                <span className="text-sm font-medium text-slate-500 dark:text-slate-400 leading-snug">
+                <span className="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 leading-snug">
                   {stat.label}
                 </span>
               </div>

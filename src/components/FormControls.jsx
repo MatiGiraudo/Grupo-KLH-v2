@@ -37,14 +37,14 @@ export function TabButton({ active, onClick, icon: Icon, label }) {
   return (
     <button 
       onClick={onClick}
-      className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
+      className={`w-full sm:w-auto flex items-center justify-center sm:justify-start gap-2.5 px-3.5 py-2.5 rounded-lg text-[10px] sm:text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap ${
         active 
           ? 'bg-klh-gold text-klh-navy shadow-md shadow-klh-gold/10' 
           : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white'
       }`}
     >
-      {Icon && <Icon size={16} />}
-      {label}
+      {Icon && <Icon size={14} className="shrink-0" />}
+      <span>{label}</span>
     </button>
   );
 }

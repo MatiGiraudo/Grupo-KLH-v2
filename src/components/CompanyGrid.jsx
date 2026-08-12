@@ -32,7 +32,7 @@ export default function CompanyGrid({ companies }) {
         </div>
 
         {/* Row of 5 Companies */}
-        <div className="grid grid-cols-2 md:grid-cols-5 mb-12">
+        <div className="flex gap-4 overflow-x-auto snap-x md:grid md:grid-cols-5 md:gap-0 mb-12 scrollbar-none pb-3 px-2">
           {companies.map((company, idx) => {
             const isSelected = company.id === selectedId;
             // Estables URLs de imágenes de Unsplash relativas al negocio de cada firma
@@ -49,8 +49,8 @@ export default function CompanyGrid({ companies }) {
               <button
                 key={company.id}
                 onClick={() => setSelectedId(company.id)}
-                className={`h-[350px] p-5 flex flex-col items-center justify-between text-center relative overflow-hidden group cursor-pointer transition-all duration-300 border ${isSelected
-                  ? 'border-klh-gold bg-white dark:bg-slate-900 shadow-md shadow-klh-gold/10 scale-110 z-10'
+                className={`h-[280px] md:h-[350px] w-[220px] md:w-auto shrink-0 snap-start p-5 flex flex-col items-center justify-between text-center relative overflow-hidden group cursor-pointer transition-all duration-300 border ${isSelected
+                  ? 'border-klh-gold bg-white dark:bg-slate-900 shadow-md shadow-klh-gold/10 md:scale-110 scale-105 z-10'
                   : 'border-slate-200 dark:border-white/10 bg-white/90 dark:bg-slate-900/60'
                   }`}
               >

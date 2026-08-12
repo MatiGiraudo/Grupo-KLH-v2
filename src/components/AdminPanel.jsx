@@ -163,14 +163,14 @@ export default function AdminPanel({ data, onSave, onLogout, theme, toggleTheme 
       </header>
 
       {/* Main Workspace Layout */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden relative">
 
         {/* Left Toolbar + Form Editor Panel */}
-        <div className={`flex flex-col h-full border-r border-slate-200 dark:border-white/10 ${showPreview ? 'w-1/2' : 'w-full'} transition-all duration-300`}>
+        <div className={`flex flex-col h-full border-r border-slate-200 dark:border-white/10 ${showPreview ? 'hidden lg:flex lg:w-1/2' : 'w-full'} transition-all duration-300`}>
 
-          <div className="flex-1 flex overflow-hidden">
+          <div className="flex-1 flex flex-col sm:flex-row overflow-hidden">
             {/* Sidebar Tabs */}
-            <div className="w-56 border-r border-slate-200 dark:border-white/5 bg-slate-100/50 dark:bg-slate-950/40 p-4 space-y-1.5 shrink-0 overflow-y-auto">
+            <div className="flex flex-row sm:flex-col border-b sm:border-b-0 sm:border-r border-slate-200 dark:border-white/5 bg-slate-100/50 dark:bg-slate-950/40 p-3 sm:p-4 gap-1.5 shrink-0 overflow-x-auto sm:overflow-y-auto scrollbar-none">
               <TabButton active={activeTab === 'hero'} onClick={() => setActiveTab('hero')} icon={Layout} label="Banner Principal" />
               <TabButton active={activeTab === 'about'} onClick={() => setActiveTab('about')} icon={Info} label="Nosotros" />
               <TabButton active={activeTab === 'companies'} onClick={() => setActiveTab('companies')} icon={Building2} label="Empresas" />
@@ -374,7 +374,7 @@ export default function AdminPanel({ data, onSave, onLogout, theme, toggleTheme 
 
         {/* Right Live Preview Panel */}
         {showPreview && (
-          <div className="w-1/2 h-full bg-slate-100 dark:bg-slate-950 flex flex-col overflow-hidden">
+          <div className="w-full lg:w-1/2 h-full bg-slate-100 dark:bg-slate-950 flex flex-col overflow-hidden">
             {/* Preview Status Bar */}
             <div className="h-10 border-b border-slate-200 dark:border-white/5 px-4 bg-slate-200/50 dark:bg-slate-900/60 flex items-center justify-between shrink-0">
               <span className="text-[10px] uppercase font-bold tracking-wider text-klh-gold flex items-center gap-1.5">
