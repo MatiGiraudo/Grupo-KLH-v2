@@ -4,11 +4,11 @@ import { getMediaUrl } from '../config';
 
 export default function Hero({ data }) {
   const [showText, setShowText] = useState(false);
+  const [scrollLocked, setScrollLocked] = useState(true);
   const [ready, setReady] = useState(false);
   const videoRef = useRef(null);
 
   // Force scroll to top on mount and set a delay before enabling scroll detection
-  // This prevents any scroll momentum/restoration from immediately triggering the text.
   useEffect(() => {
     window.scrollTo(0, 0);
     const timer = setTimeout(() => {
@@ -17,7 +17,39 @@ export default function Hero({ data }) {
     return () => clearTimeout(timer);
   }, []);
 
-  // Programmatic video play helper (especially helpful on mobile/iOS power save mode)
+  // Programmatic scroll lock enforcement
+  useEffect(() => {
+    if (!ready) return;
+
+    const handleScroll = () => {
+      if (scrollLocked) {
+        window.scrollTo(0, 0);
+      }
+    };
+
+    if (scrollLocked) {
+      window.scrollTo(0, 0);
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: false });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [ready, scrollLocked]);
+
+  // Release scroll lock on any anchor link clicks (e.g. Navbar navigation)
+  useEffect(() => {
+    const handleAnchorClick = (e) => {
+      const anchor = e.target.closest('a');
+      if (anchor && anchor.getAttribute('href')) {
+        setShowText(true);
+        setScrollLocked(false);
+      }
+    };
+
+    document.addEventListener('click', handleAnchorClick);
+    return () => document.removeEventListener('click', handleAnchorClick);
+  }, []);
+
+  // Programmatic video play helper
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.play().catch(err => {
@@ -26,18 +58,48 @@ export default function Hero({ data }) {
     }
   }, [data.bgImageUrl, ready]);
 
-  // Intercept the first scroll down / touch swipe to show the Hero text first
+  // Handle wheel events for desktops
   useEffect(() => {
-    if (!ready || showText) return;
-
-    let touchStartY = 0;
+    if (!ready) return;
 
     const handleWheel = (e) => {
-      if (e.deltaY > 0) {
-        e.preventDefault();
-        setShowText(true);
+      const isScrollTop = window.scrollY <= 5;
+
+      if (!showText) {
+        // Step 1: Scroll down -> reveal text, keep scroll locked
+        if (e.deltaY > 0) {
+          e.preventDefault();
+          setShowText(true);
+        }
+      } else if (scrollLocked) {
+        // Step 2: Scroll down -> unlock page scroll
+        if (e.deltaY > 0) {
+          setScrollLocked(false);
+        }
+        // Scroll up -> hide text
+        if (isScrollTop && e.deltaY < 0) {
+          e.preventDefault();
+          setShowText(false);
+        }
+      } else {
+        // Step 3: At top, scroll up -> lock scroll and hide text
+        if (isScrollTop && e.deltaY < 0) {
+          e.preventDefault();
+          setShowText(false);
+          setScrollLocked(true);
+        }
       }
     };
+
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    return () => window.removeEventListener('wheel', handleWheel);
+  }, [ready, showText, scrollLocked]);
+
+  // Handle touch events for mobile
+  useEffect(() => {
+    if (!ready) return;
+
+    let touchStartY = 0;
 
     const handleTouchStart = (e) => {
       touchStartY = e.touches[0].clientY;
@@ -45,24 +107,43 @@ export default function Hero({ data }) {
 
     const handleTouchMove = (e) => {
       const touchEndY = e.touches[0].clientY;
-      // swipe up (finger moving up to scroll down)
-      if (touchStartY - touchEndY > 15) {
-        e.preventDefault();
-        setShowText(true);
+      const isScrollTop = window.scrollY <= 5;
+      const swipeDistance = touchStartY - touchEndY; // Positive means swipe up (scroll down)
+
+      if (!showText) {
+        // Step 1: Swipe up -> reveal text
+        if (swipeDistance > 15) {
+          e.preventDefault();
+          setShowText(true);
+        }
+      } else if (scrollLocked) {
+        // Step 2: Swipe up -> unlock page scroll
+        if (swipeDistance > 15) {
+          setScrollLocked(false);
+        }
+        // Swipe down -> hide text
+        if (isScrollTop && swipeDistance < -15) {
+          e.preventDefault();
+          setShowText(false);
+        }
+      } else {
+        // Step 3: Swipe down -> lock scroll and hide text
+        if (isScrollTop && swipeDistance < -15) {
+          e.preventDefault();
+          setShowText(false);
+          setScrollLocked(true);
+        }
       }
     };
 
-    // Use passive: false to allow preventDefault
-    window.addEventListener('wheel', handleWheel, { passive: false });
     window.addEventListener('touchstart', handleTouchStart, { passive: true });
     window.addEventListener('touchmove', handleTouchMove, { passive: false });
 
     return () => {
-      window.removeEventListener('wheel', handleWheel);
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchmove', handleTouchMove);
     };
-  }, [ready, showText]);
+  }, [ready, showText, scrollLocked]);
 
   // Detect if the background URL represents a video file
   const isVideo = data.bgImageUrl && (
